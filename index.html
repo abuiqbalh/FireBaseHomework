@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed|IBM+Plex+Serif|Roboto+Condensed" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+    <style>
+    body{
+
+        font-family: 'Roboto Condensed', sans-serif;
+        font-family: 'IBM Plex Serif', serif;
+        font-family: 'IBM Plex Sans Condensed', sans-serif;
+    }
+    .common{
+        height: 100px;
+        width: 200px;
+        margin-bottom: 20px;
+        border:1px solid blueviolet;
+        margin-right:1px
+    
+    }
+    
+    #player{
+    
+
+    }
+
+    #message{
+
+        height: 100px;
+        width: 300px;
+        margin-left:25%;
+        margin-right: 25%;
+        margin-bottom:10px;
+
+    }
+
+    #playerMessage{
+        margin-left:25%;
+        margin-right: 25%;
+
+    }
+
+    h2{
+        text-align: center;
+    }
+    </style>
+</head> 
+
+
+<body>
+<div class="container">
+    <div id="header">
+        <h2>Rock Paper Scissor</h2>
+    </div>
+    <div id="turn">
+        <p>Please Eneter Your Name to Play</p>
+        <input type="text" id="playerName"><button type="submit" id="playerEntry">Submit</button>
+        <p id="gameTurn"></p>
+        <br>
+
+    </div>
+    <div id="player" class="row">
+
+        <div class="col-md-4 common">
+            Player One<br>
+            
+            <select id="playerOne">
+                    <option value="rock">Rock</option>
+                    <option value="paper">Paper</option>
+                    <option value="Scissor">Scissor</option>
+                    
+            </select>
+
+            
+        </div>
+
+    
+    
+        <div class="col-md-3 common">
+            Game Status</br>
+        
+        </div>
+
+    
+        <div class="col-md-4 common">
+            Player One</br>
+            
+            <select id="playerTwo">
+                    <option value="rock">Rock</option>
+                    <option value="paper">Paper</option>
+                    <option value="Scissor">Scissor</option>
+                    
+            </select>
+    
+            
+    </div>
+    
+    </div>
+
+        <input type="text" id=message class="row"></text>
+        <div id="playerMessage">
+        <input type="text">
+        <button type=submit id="submit">Submit</button>
+    </div>
+
+
+
+
+</div>
+<script>
+
+
+  // Initialize Firebase
+    var config = {
+    apiKey: "AIzaSyAHuLrOrwI3dk8MouSlvQpCyHk6_R2M1zs",
+    authDomain: "myproject-c668c.firebaseapp.com",
+    databaseURL: "https://myproject-c668c.firebaseio.com",
+    projectId: "myproject-c668c",
+    storageBucket: "myproject-c668c.appspot.com",
+    messagingSenderId: "451084156159"
+  };
+  firebase.initializeApp(config);
+
+  var playerOne="";
+  var playerTwo="";
+  var win=0;
+  var lose=0;
+  var gameStatus="";
+  var database = firebase.database();
+
+   $("#playerEntry").click(function(){
+        playerOne = $("#playerName").val().trim();
+        console.log(playerOne);
+        database.ref().set({
+        playerOne: playerOne})
+      })
+  database.ref().on("value", function(snapshot) {
+  // We are now inside our .on function...
+
+  // Console.log the "snapshot" value (a point-in-time representation of the database)
+  console.log(snapshot.val());
+  // This "snapshot" allows the page to get the most current values in firebase.
+
+  // Change the value of our clickCounter to match the value in the database
+  playerOne = snapshot.val().playerOne;
+  playerTwo = snapshot.val().playerTwo;
+  win = snapshot.val().win;
+  lose = snapshot.val().lose;
+  gameStatus = snapshot.val().gameStatus;
+
+
+}, function(errorObject) {
+  console.log("The read failed: " + errorObject.code);
+})
+
+  database.ref().set({
+        playerOne: playerOne,
+        playerTwo:playerTwo,
+        win:win,
+        lose:lose,
+        gameStatus:gameStatus
+
+      });
+
+     
+        function game() {
+            var playerOneInput = $("#playerOne").options.val();
+            var playerTwoInput=$("#playerTwo").options.val();
+
+            if(playerOne==="rock"||playerTwo==="rock"){
+                gameStatus="Nobody wins, Draw"
+            }
+        else if(playerOneInput==="rock"||playerTwoInput==="paper"){
+            gameStatus="PlayerTwo wins";
+            
+        }
+    
+    </script>   
+
+</body>
+</html>
